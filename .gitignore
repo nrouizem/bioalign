@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+.vscode/
+bioalign.egg-info/
+data/
+test_align_with_biopy.py
+ideas.txt
+scratchpad.ipynb
