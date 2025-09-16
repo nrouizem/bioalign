@@ -6,7 +6,7 @@
 
 #### foo() - 2025-09-16
 - **AI role:** plan|scaffold|refactor|review
-- **Prompt:** 
+- **Prompt Summary:** 
 - **Accepted:** 
 - **Rejected:** 
 - **Verification:**
@@ -29,3 +29,13 @@
 - **Rejected:** various suggestions that didn't align with my goals
 - **Verification:** N/A
 - **Learning impact:** Learned how to structure a basic SWE project proposal.
+
+## pyproject.toml
+
+#### pyproject.toml - 2025-09-16
+- **AI role:** review
+- **Prompt Summary:** "Review pyproject.toml and suggest any changes for it to be in line with the current state of the project."
+- **Accepted:** most suggestions
+- **Rejected:** optional/unnecessary suggestions (such as a v1+ change)
+- **Verification:** 
+- **Learning impact:** Not much; got to see what a small, structured pyproject.toml file looks like
