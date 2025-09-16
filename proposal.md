@@ -142,7 +142,7 @@
     - **Inputs**: two sequences `S` (length `n`), `T` (length `m`); alphabet assumed to be uppercase DNA/protein (validate/normalize).
     - **Scoring**: `delta(x,y)` = match/mismatch (linear gaps in v0). `gap.open == gap.extend == g` (integer).
     - **Outputs**: `(S_aln, T_aln, score)` plus optional CIGAR.
-    - **Matrix** convention: DP matrix `M` has shape `(m+1)×(n+1)`; row `i` indexes `T[:i]`, column `j` indexes `S[:j]`.
+    - **Matrix** convention: DP matrix `M` has shape `(m+1)×(n+1)`; row `i` indexes `S[:i]`, column `j` indexes `T[:j]`.
 
 - **b) Initialization (mode-specific boundary conditions)**
     - **Global (NW)**:

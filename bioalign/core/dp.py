@@ -26,13 +26,16 @@ def mat_fill_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn):
     -------
     None
     """
-    for m in range(1, len(S)+1):
-        for n in range(1, len(T)+1):
-            from_up = M[m-1, n] + gap
-            from_left = M[m, n-1] + gap
-            from_diag = M[m-1, n-1] + delta(S[m-1], T[n-1])
-            M[m, n] = max(from_up, from_left, from_diag)
+    # Convention: M has shape (len(S)+1, len(T)+1); rows index S, cols index T
+    assert M.shape == (len(S)+1, len(T)+1)
+    for i in range(1, len(S)+1):
+        for j in range(1, len(T)+1):
+            from_up = M[i-1, j] + gap
+            from_left = M[i, j-1] + gap
+            from_diag = M[i-1, j-1] + delta(S[i-1], T[j-1])
+            M[i, j] = max(from_up, from_left, from_diag)
 
+# TODO: implement `free` and `return_cigar`
 def align(
         S: str,
         T: str,
@@ -45,12 +48,19 @@ def align(
 ) -> AlignResult:
     """
     Functional alignment API (v0: global only).
+
+    Returns
+    -------
+    `AlignResult`
+        Custom class containing `score`, `S_aln`, `T_aln`, and optionally `cigar`, `matrix`, and `meta`.
     """
     if mode != "global":
         raise NotImplementedError("Only global NW is currently implemented.")
     if delta is None:
         from .scoring import make_delta
         delta = make_delta()
+    if free and mode != "semi-global":
+        raise RuntimeError("Parameter `free` can only be used in semi-global mode.")
     
     gap = gap.open
     m, n = len(S), len(T)
@@ -64,7 +74,7 @@ def align(
 
     # Traceback
     S_aln, T_aln = traceback_global(M, S, T, gap, delta)
-    score = M[m, n]
+    score = int(M[m, n])
 
     result = AlignResult(
         score = score,

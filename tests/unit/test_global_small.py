@@ -25,10 +25,8 @@ def test_global_simple_gap_mismatch():
 def test_global_tie_break_diag_over_up_left():
     # Construct a 2x2 where multiple paths tie; enforce diag > up > left.
     # With S='AG', T='AA', match=+1, mismatch=-1, gap=-2
-    # Optimal should align first A-A on diagonal first due to tie-break.
     res = align("AG", "AA", mode="global", gap=GapScheme.linear(-2))
-    # Just assert determinism form: starts with aligned 'A' vs 'A'
-    assert res.S_aln[0] == "A" and res.T_aln[0] == "A"
+    assert res.S_aln == "AG" and res.T_aln == "AA"
 
 def test_global_empty_vs_nonempty():
     res = align("", "TT", mode="global", gap=GapScheme.linear(-2))

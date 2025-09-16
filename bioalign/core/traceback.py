@@ -3,7 +3,7 @@ from .types import ScoreFn
 
 def traceback_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn) -> tuple[str, str]:
     """
-    Forward matrix-filling step.
+    NW traceback step.
 
     Parameters
     ----------
@@ -23,6 +23,7 @@ def traceback_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn) ->
     `(str, str)`
         2-tuple of aligned sequences.
     """
+    # Convention: M has shape (len(S)+1, len(T)+1); rows index S, cols index T
     m, n = M.shape[0] - 1, M.shape[1] - 1
     S_aln = ""
     T_aln = ""
