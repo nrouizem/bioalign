@@ -39,12 +39,13 @@ def mat_fill(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn, mode: Mode
                 M[i, j] = max(from_up, from_left, from_diag)
 
 # TODO: implement `free` and `return_cigar`
-# TODO: add match + mismatch score args
 def align(
         S: str,
         T: str,
         mode: Mode = "global",
         gap: GapScheme = GapScheme.linear(-2),
+        match: int = 1,
+        mismatch: int = -1,
         free: Optional[FreeEnds] = None,
         delta: Optional[ScoreFn] = None,
         return_matrix: bool = False,
@@ -62,7 +63,7 @@ def align(
         raise NotImplementedError(f"Mode {mode} has not been implemented.")
     if delta is None:
         from .scoring import make_delta
-        delta = make_delta()
+        delta = make_delta(match=match, mismatch=mismatch)
     if free and mode != "semi-global":
         raise RuntimeError("Parameter `free` can only be used in semi-global mode.")
     

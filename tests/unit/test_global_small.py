@@ -29,7 +29,15 @@ def test_global_tie_break_diag_over_up_left():
     assert res.S_aln == "AG" and res.T_aln == "AA"
 
 def test_global_empty_vs_nonempty():
-    res = align("", "TT", mode="global", gap=GapScheme.linear(-2))
-    assert res.score == -4
+    res = align("", "TT", mode="global", gap=GapScheme.linear(-3))
+    assert res.score == -6
     assert res.S_aln == "--"
     assert res.T_aln == "TT"
+
+def test_global_nonunit_match():
+    # Tests match != 1.
+    # S='AG', T='CTG' → one gap and one mismatch; score = (-2) + (-1) + 2 = -1
+    res = align("AG", "CTG", mode="global", match=2, gap=GapScheme.linear(-2))
+    assert res.score == -1
+    assert res.S_aln == "-AG"
+    assert res.T_aln == "CTG"

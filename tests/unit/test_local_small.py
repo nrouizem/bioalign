@@ -28,5 +28,10 @@ def test_local_class_example2():
     assert res.score == 2
     assert res.S_aln == "GC"
     assert res.T_aln == "GC"
-    
-# TODO: add example with match score != 1
+
+def test_local_class_example3():
+    # S='ATAGC', T='TCGC' with match=+3, gap=-5
+    res = align("ATAGC", "TCGC", mode="local", match=3, gap=GapScheme.linear(-5))
+    assert res.score == 8
+    assert res.S_aln == "TAGC"
+    assert res.T_aln == "TCGC"
