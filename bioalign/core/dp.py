@@ -2,12 +2,12 @@ from __future__ import annotations
 import numpy as np
 from typing import Optional
 from .types import AlignResult, GapScheme, FreeEnds, Mode, ScoreFn
-from .init import init_global
-from .traceback import traceback_global
+from .init import init
+from .traceback import traceback
 
-def mat_fill_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn):
+def mat_fill(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn, mode: Mode):
     """
-    Forward matrix-filling step.
+    In-place forward matrix-filling step.
 
     Parameters
     ----------
@@ -33,9 +33,13 @@ def mat_fill_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn):
             from_up = M[i-1, j] + gap
             from_left = M[i, j-1] + gap
             from_diag = M[i-1, j-1] + delta(S[i-1], T[j-1])
-            M[i, j] = max(from_up, from_left, from_diag)
+            if mode == "local":
+                M[i, j] = max(from_up, from_left, from_diag, 0)
+            else:
+                M[i, j] = max(from_up, from_left, from_diag)
 
 # TODO: implement `free` and `return_cigar`
+# TODO: add match + mismatch score args
 def align(
         S: str,
         T: str,
@@ -47,15 +51,15 @@ def align(
         return_cigar: bool = False,
 ) -> AlignResult:
     """
-    Functional alignment API (v0: global only).
+    Functional alignment API (v0: global and local only).
 
     Returns
     -------
     `AlignResult`
         Custom class containing `score`, `S_aln`, `T_aln`, and optionally `cigar`, `matrix`, and `meta`.
     """
-    if mode != "global":
-        raise NotImplementedError("Only global NW is currently implemented.")
+    if mode not in ["global", "local"]:
+        raise NotImplementedError(f"Mode {mode} has not been implemented.")
     if delta is None:
         from .scoring import make_delta
         delta = make_delta()
@@ -67,14 +71,13 @@ def align(
     M = np.zeros((m+1, n+1), dtype=np.int32)
     
     # Initialize matrix
-    init_global(M, gap)
+    init(M, gap, mode, free)
 
     # Forward-filling step
-    mat_fill_global(M, S, T, gap, delta)
+    mat_fill(M, S, T, gap, delta, mode)
 
     # Traceback
-    S_aln, T_aln = traceback_global(M, S, T, gap, delta)
-    score = int(M[m, n])
+    (S_aln, T_aln), score = traceback(M, S, T, gap, delta, mode)
 
     result = AlignResult(
         score = score,

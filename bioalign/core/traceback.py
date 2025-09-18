@@ -1,7 +1,7 @@
 import numpy as np
-from .types import ScoreFn
+from .types import ScoreFn, Mode
 
-def traceback_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn) -> tuple[str, str]:
+def traceback(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn, mode: Mode) -> tuple[tuple[str, str], int]:
     """
     NW traceback step.
 
@@ -22,13 +22,24 @@ def traceback_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn) ->
     -------
     `(str, str)`
         2-tuple of aligned sequences.
+    `int`
+        Alignment score.
     """
     # Convention: M has shape (len(S)+1, len(T)+1); rows index S, cols index T
-    m, n = M.shape[0] - 1, M.shape[1] - 1
+    if mode == "global":
+        m, n = M.shape[0] - 1, M.shape[1] - 1
+    elif mode == "local":
+        m, n = np.unravel_index(np.argmax(M), M.shape)
+    else:
+        raise NotImplementedError("No semi-global in traceback yet.")
     S_aln = ""
     T_aln = ""
+    score = int(M[m, n])
 
     while m > 0 or n > 0:
+        if mode == "local":
+            if M[m, n] == 0:
+                break
         if m > 0 and n > 0:
             current_score = M[m, n]
             score_diag = M[m-1, n-1] + delta(S[m-1], T[n-1])
@@ -64,4 +75,4 @@ def traceback_global(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn) ->
     if len(S_aln) != len(T_aln):
             raise RuntimeError("Aligned sequences aren't the same length; something went wrong.")
     
-    return S_aln, T_aln
+    return (S_aln, T_aln), score
