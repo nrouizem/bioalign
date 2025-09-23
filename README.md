@@ -26,7 +26,7 @@ This repository currently contains:
 ---
 
 ## Roadmap
-- [ ] Implement NW + SW in `bioalign/core/`
+- [x] Implement NW + SW in `bioalign/core/`
 - [ ] Add CLI (`bioalign/cli/`)
 - [ ] Parity tests vs Biopython
 - [ ] CI workflow (lint, type, test)
