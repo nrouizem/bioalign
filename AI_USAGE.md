@@ -33,6 +33,16 @@
 - **Verification:** tests pass
 - **Learning impact:** Learned about the `dataclass` schema.
 
+## bioalign/tests/unit
+
+#### 2025-09-23
+- **AI role:** plan
+- **Prompt Summary:** "Generate small tests for global, semi-global, and local alignments of two sequences."
+- **Accepted:** Some correct tests; also modified some incorrect tests
+- **Rejected:** Incorrect tests
+- **Verification:** tests pass; checked tests manually
+- **Learning impact:** This was more about generating a starting test suite; I had to go through the tests by hand because some weren't correct, particularly semi-global tests.
+
 ## proposal.md
 
 #### 2025-09-16
