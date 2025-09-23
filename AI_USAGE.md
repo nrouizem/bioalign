@@ -37,7 +37,7 @@
 
 #### 2025-09-23
 - **AI role:** plan
-- **Prompt Summary:** "Generate small tests for global, semi-global, and local alignments of two sequences."
+- **Prompt Summary:** "Generate small tests for global, semi-global, and local alignments of two sequences, as well as FASTA parsing with tmp paths."
 - **Accepted:** Some correct tests; also modified some incorrect tests
 - **Rejected:** Incorrect tests
 - **Verification:** tests pass; checked tests manually
