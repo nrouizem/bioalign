@@ -27,7 +27,8 @@ def mat_fill(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn, mode: Mode
     None
     """
     # Convention: M has shape (len(S)+1, len(T)+1); rows index S, cols index T
-    assert M.shape == (len(S)+1, len(T)+1)
+    if M.shape != (len(S)+1, len(T)+1):
+        raise RuntimeError("M matrix does not have the correct shape.")
     for i in range(1, len(S)+1):
         for j in range(1, len(T)+1):
             from_up = M[i-1, j] + gap
@@ -38,7 +39,7 @@ def mat_fill(M: np.ndarray, S: str, T: str, gap: int, delta: ScoreFn, mode: Mode
             else:
                 M[i, j] = max(from_up, from_left, from_diag)
 
-# TODO: implement `free` and `return_cigar`
+# TODO: implement `return_cigar`
 def align(
         S: str,
         T: str,
@@ -59,8 +60,8 @@ def align(
     `AlignResult`
         Custom class containing `score`, `S_aln`, `T_aln`, and optionally `cigar`, `matrix`, and `meta`.
     """
-    if mode not in ["global", "local"]:
-        raise NotImplementedError(f"Mode {mode} has not been implemented.")
+    if mode not in ["global", "local", "semi-global"]:
+        raise RuntimeError(f"Mode {mode} is not valid.")
     if delta is None:
         from .scoring import make_delta
         delta = make_delta(match=match, mismatch=mismatch)
@@ -78,7 +79,7 @@ def align(
     mat_fill(M, S, T, gap, delta, mode)
 
     # Traceback
-    (S_aln, T_aln), score = traceback(M, S, T, gap, delta, mode)
+    (S_aln, T_aln), score = traceback(M, S, T, gap, delta, mode, free)
 
     result = AlignResult(
         score = score,
