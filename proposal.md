@@ -93,6 +93,7 @@
 **Likely extensions**
 - Affine gap penalties (Gotoh’s algorithm)
 - Expanded evaluation metrics: statistical significance tests, visualization (dot plots, alignment viewers)
+- Multiple sequence alignment
 
 **Exploratory projects**
 - Homology search: basic/mini implementations inspired by BLAST and FASTA
@@ -382,6 +383,7 @@
 
 - What’s the most transparent way to expose semi-global free-end flags?
 - Should FASTA parsing be in io/ or use an external lib?
+    - I'd like to implement this myself -> add io/fasta.py
 
 ## Process & Gates
 - Development Process
