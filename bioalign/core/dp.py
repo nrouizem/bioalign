@@ -61,12 +61,21 @@ def align(
         Custom class containing `score`, `S_aln`, `T_aln`, and optionally `cigar`, `matrix`, and `meta`.
     """
     if mode not in ["global", "local", "semi-global"]:
-        raise RuntimeError(f"Mode {mode} is not valid.")
+        raise ValueError(f"Mode {mode} is not valid.")
     if delta is None:
         from .scoring import make_delta
         delta = make_delta(match=match, mismatch=mismatch)
     if free and mode != "semi-global":
-        raise RuntimeError("Parameter `free` can only be used in semi-global mode.")
+        raise ValueError("Parameter `free` can only be used in semi-global mode.")
+    
+    # Mode is semi-global but no free flags were set; re-route to global mode for clarity
+    if mode == "semi-global" and not (free.begin_S or free.begin_T or free.end_S or free.end_T):
+        mode = "global"
+        free = None
+
+    # Clarify not implemented
+    if return_cigar:
+        raise NotImplementedError("`return_cigar` has not yet been implemented.")
     
     gap = gap.open
     m, n = len(S), len(T)

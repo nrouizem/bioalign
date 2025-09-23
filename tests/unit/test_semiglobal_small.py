@@ -69,3 +69,11 @@ def test_semiglobal_class_ignore_endT():
     assert res.score == 0
     assert res.S_aln == "ATGAC"
     assert res.T_aln == "AC---"
+
+def test_free_flags_invalid_in_global():
+    with pytest.raises(ValueError):
+        align("ACT", "ACT", mode="global", gap=GapScheme.linear(-2), free=FreeEnds(end_S=True))
+    
+def test_bad_mode():
+    with pytest.raises(ValueError):
+        align("ACT", "ACT", mode="something_else")
